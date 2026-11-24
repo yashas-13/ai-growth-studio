@@ -6,9 +6,16 @@ import { ensurePersonalWorkspace } from '@/server/auth/workspace-provisioning'
 
 const field = (form: FormData, key: string) => String(form.get(key) ?? '').trim()
 
+function safeInternalPath(value: string, fallback = '/dashboard') {
+  return value.startsWith('/') && !value.startsWith('//') && !value.includes('\\\\')
+    ? value
+    : fallback
+}
+
 export async function signInAction(form: FormData) {
   const email = field(form, 'email').toLowerCase()
   const password = String(form.get('password') ?? '')
+  const destination = safeInternalPath(field(form, 'next'))
 
   if (!email || !password) {
     redirect('/login?error=Enter%20email%20and%20password')
@@ -33,7 +40,8 @@ export async function signInAction(form: FormData) {
     redirect('/login?error=Unable%20to%20prepare%20your%20workspace.%20Please%20try%20again.')
   }
 
-  redirect('/dashboard?welcome=1')
+  const target = destination === '/dashboard' ? '/dashboard?welcome=1' : destination
+  redirect(target)
 }
 
 export async function signUpAction(form: FormData) {
