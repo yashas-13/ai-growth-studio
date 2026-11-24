@@ -1,0 +1,4 @@
+import 'server-only'
+import type { SupabaseClient } from '@supabase/supabase-js'
+function slugify(s:string){return s.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)||'workspace'}
+export async function ensurePersonalWorkspace(client:SupabaseClient,userId:string,workspaceName:string){const {data:membership,error:lookupError}=await client.from('memberships').select('workspace_id').eq('user_id',userId).limit(1).maybeSingle();if(lookupError)throw lookupError;if(membership)return membership.workspace_id;const name=workspaceName.trim().slice(0,120)||'My Workspace';const {data:workspace,error}=await client.from('workspaces').insert({name,slug:slugify(name)+'-'+userId.slice(0,8),created_by:userId}).select('id').single();if(error)throw error;const {error:memberError}=await client.from('memberships').insert({workspace_id:workspace.id,user_id:userId,role:'OWNER'});if(memberError)throw memberError;return workspace.id as string}

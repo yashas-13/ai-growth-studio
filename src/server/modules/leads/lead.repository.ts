@@ -1,22 +1,8 @@
 import 'server-only'
-import { prisma } from '@/lib/prisma'
-import type { LeadStatus } from '@/generated/prisma/client'
-
-export type ListLeadsQuery = { search?: string; status?: LeadStatus; take: number; cursor?: string }
-
-export function listWorkspaceLeads(workspaceId: string, query: ListLeadsQuery) {
-  return prisma.lead.findMany({
-    where: {
-      workspaceId,
-      ...(query.status ? { status: query.status } : {}),
-      ...(query.search ? { OR: [
-        { name: { contains: query.search, mode: 'insensitive' } },
-        { company: { contains: query.search, mode: 'insensitive' } },
-        { email: { contains: query.search, mode: 'insensitive' } },
-      ] } : {}),
-    },
-    orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
-    take: query.take + 1,
-    ...(query.cursor ? { cursor: { id: query.cursor }, skip: 1 } : {}),
-  })
-}
+import {AppError} from '@/server/http/app-error'
+import {createClient} from '@/lib/supabase/server'
+export type ListLeadsQuery={search?:string;status?:'NEW'|'QUALIFIED'|'CONTACTED'|'CONVERTED'|'DISQUALIFIED';take:number;cursor?:string}
+type Cursor={createdAt:string;id:string}
+function decodeCursor(value:string):Cursor{try{const parsed=JSON.parse(Buffer.from(value,'base64url').toString('utf8')) as Partial<Cursor>;if(typeof parsed.createdAt!=='string'||Number.isNaN(Date.parse(parsed.createdAt))||typeof parsed.id!=='string'||!/^[0-9a-f-]{36}$/i.test(parsed.id))throw new Error();return {createdAt:parsed.createdAt,id:parsed.id}}catch{throw new AppError('BAD_REQUEST','Invalid pagination cursor')}}
+export function encodeLeadCursor(row:{created_at:string;id:string}){return Buffer.from(JSON.stringify({createdAt:row.created_at,id:row.id})).toString('base64url')}
+export async function listWorkspaceLeads(workspaceId:string,q:ListLeadsQuery){const s=await createClient();let req=s.from('leads').select('id,workspace_id,name,company,email,industry,score,status,source,notes,created_at,updated_at').eq('workspace_id',workspaceId).order('created_at',{ascending:false}).order('id',{ascending:false}).limit(q.take+1);if(q.status)req=req.eq('status',q.status);if(q.search){const term=q.search.replace(/[,%()]/g,'');req=req.or('name.ilike.%'+term+'%,company.ilike.%'+term+'%,email.ilike.%'+term+'%')}if(q.cursor){const c=decodeCursor(q.cursor);req=req.or('created_at.lt.'+c.createdAt+',and(created_at.eq.'+c.createdAt+',id.lt.'+c.id+')')}const {data,error}=await req;if(error)throw error;return data??[]}

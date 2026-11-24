@@ -1,16 +1,26 @@
 # AI Growth Studio
 
-A demonstrator for the AI Growth Studio product proposal: AdGenius AI, BrandPilot AI, LeadHunter AI, MarketPulse AI + AEO, and a vendor-neutral CRM orchestration layer.
+Multi-tenant AI growth operations platform built as a Next.js modular monolith with Supabase Auth, PostgreSQL, Row Level Security and private Storage.
 
-## Status
+## Current status
 
-**Prototype / demo data only.** AI outputs, KPIs, leads, connector states and AEO observations are illustrative. No advertising account, external CRM, search engine, or AI provider is connected. No real prospect verification or external action is performed.
+**Backend foundation connected; feature UI remains partly demo/scaffold.** Supabase project and schema are provisioned. Email/password auth, PKCE callback, cookie-backed SSR session refresh, workspace bootstrap, membership authorization, RLS and the first persistent Leads API are implemented. Campaign, BrandPilot, CRM and MarketPulse tables exist, but their complete workflows and provider integrations are not finished.
 
 ## Stack
 
-- Next.js App Router, React, TypeScript
-- Tailwind CSS 4
-- Local client state for the prototype
+- Next.js App Router 16, React 19, TypeScript, Tailwind CSS 4
+- Supabase Auth with @supabase/ssr (PKCE and cookie-backed sessions)
+- Supabase PostgreSQL 17, typed Supabase client, RLS and private Storage
+- Zod validation; modular-monolith server modules
+
+## Supabase project
+
+- Name: AI Growth Studio
+- Region: South Asia (Mumbai), ap-south-1
+- Project ref: qqlhtdxcwnwqrzemkvhc
+- URL: https://qqlhtdxcwnwqrzemkvhc.supabase.co
+
+Set NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY and NEXT_PUBLIC_APP_URL in your local environment. Use only the publishable key in browser-capable configuration. Never expose a Supabase secret/service-role key. See docs/SUPABASE-SETUP.md.
 
 ## Run locally
 
@@ -23,44 +33,30 @@ npm run dev
 
 Open http://localhost:3000.
 
-## Build checks
+## Checks
 
 ```powershell
 npm run lint
-npx tsc --noEmit
+npm run typecheck
 npm run build
+npm audit
 ```
 
-## Product workspaces
+## Product areas
 
-- **AdGenius AI:** business brief, audience, objective, sample campaign strategy, sample ad copy and budget.
-- **BrandPilot AI:** brand onboarding, identity preview, color palette and voice principles.
-- **LeadHunter AI:** illustrative prospects, rule-based demo scores and outreach draft affordance.
-- **MarketPulse AI:** defined-query AEO audit interface and illustrative sample report.
-- **CRM Hub:** canonical entities, connector readiness and simulated sync activity.
-- **Settings:** workspace profile and configuration state.
+- AdGenius AI: campaign strategy and advertising operations
+- BrandPilot AI: brand profile, assets and content calendar
+- LeadHunter AI: lead intake, qualification and outreach
+- MarketPulse AI: competitor, keyword, SEO and AEO research
+- CRM Hub: companies, contacts, deals, activities and connectors
+- Settings: workspace, team, AI providers, integrations, security and billing
 
-## Target architecture (not yet implemented)
+Routes exist for these product areas. Treat scaffold/placeholder screens as incomplete until their persistence, validation, authorization and workflows are implemented.
 
-The product proposal calls for five layers:
+## Architecture
 
-1. Unified workspace and role-aware experience.
-2. Specialized AI product suite.
-3. CRM abstraction and connectors.
-4. Shared AI/data services, workflow, analytics, usage and audit.
-5. Cloud and storage foundation.
+A modular monolith: App Router pages and thin API handlers -> feature-owned use cases -> server-side Supabase clients -> PostgreSQL with RLS. Workspace membership and role checks are enforced in server code and again by RLS. Storage objects are private and tenant-prefixed. AI/provider jobs, outbox processing, OAuth connectors, billing and external integrations are planned but not implemented.
 
-Proposed production components: PostgreSQL with tenant isolation, Redis/BullMQ workers, provider-agnostic AI gateway, server-side secret management, OAuth 2.0 CRM connectors, signed webhooks, idempotent sync, immutable audit events and S3-compatible asset storage.
+## Production gate
 
-## Security and production gap
-
-This prototype intentionally does not implement authentication, tenant persistence, provider calls, OAuth, lead scraping, real analytics, billing or external synchronization. Do not use it with production customer data. Those capabilities need threat modelling, authorization tests, tenant-isolation tests, retention/deletion workflows, secret handling, provider contract tests and operational monitoring before launch.
-
-## Roadmap
-
-1. Foundation, auth/organizations, schema and AdGenius end-to-end workflow.
-2. BrandPilot identity generation, editable content and export.
-3. LeadHunter qualification, outreach drafts, canonical CRM model and one real connector.
-4. MarketPulse source-backed competitive/SEO/AEO reporting, observability, pilot validation and deployment hardening.
-
-Pricing in the source proposal is illustrative and must be validated with pilot customers.
+Do not onboard production customers until production hostname/redirect allowlists, email delivery/templates, cross-tenant negative tests, end-to-end tests, observability, backup/restore, rate limiting, retention and deployment secrets are verified. Core module workflows must be completed before release.

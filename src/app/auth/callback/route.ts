@@ -1,0 +1,4 @@
+import {NextResponse,type NextRequest} from 'next/server'
+import {createClient} from '@/lib/supabase/server'
+import {ensurePersonalWorkspace} from '@/server/auth/workspace-provisioning'
+export async function GET(request:NextRequest){const code=request.nextUrl.searchParams.get('code'),next=request.nextUrl.searchParams.get('next')??'/dashboard';if(!code)return NextResponse.redirect(new URL('/login?error=Missing%20authentication%20code',request.url));const s=await createClient();const {error}=await s.auth.exchangeCodeForSession(code);if(error)return NextResponse.redirect(new URL('/login?error=Unable%20to%20verify%20account',request.url));const {data:{user}}=await s.auth.getUser();if(user)await ensurePersonalWorkspace(s,user.id,String(user.user_metadata?.workspace_name??'My Workspace'));return NextResponse.redirect(new URL(next.startsWith('/')&&!next.startsWith('//')?next:'/dashboard',request.url))}

@@ -1,23 +1,28 @@
 # Implementation status — 2026-11-24
 
-## Completed in this milestone
+## Completed
 
-- Upgraded Next.js and ESLint config to 16.4.6 after npm audit identified affected versions below the patched release.
-- Added Prisma ORM 7 PostgreSQL schema and a singleton driver-adapter client.
-- Added workspace, user, membership, lead and audit-event data models.
-- Added Zod lead input contract.
-- Added liveness and database-readiness endpoints.
-- Added an architecture decision record documenting trust boundaries.
+- Created Supabase project qqlhtdxcwnwqrzemkvhc in Mumbai (ap-south-1), PostgreSQL 17.
+- Applied database migrations for profiles, workspaces, memberships, leads, campaigns, brand profiles/assets, content calendar, companies, contacts, deals, activities, competitors, keywords, market reports and audit events.
+- Enabled RLS on all application tables in public; added workspace membership/role policies and private-schema SECURITY DEFINER helpers with fixed search paths and restricted EXECUTE grants.
+- Created private brand-assets Storage bucket with workspace-prefixed object policies and 20 MiB limit.
+- Added Supabase SSR/browser clients, PKCE callback, cookie refresh proxy, email/password sign-in, sign-up, password reset request and sign-out actions.
+- Added workspace bootstrap and OWNER membership creation; protected workspace route group and workspace permission checks.
+- Replaced Prisma lead repository with Supabase queries and connected GET/POST Leads API.
+- Added generated database TypeScript types and replaced readiness probe with a Supabase/PostgREST check.
+- Removed Prisma packages/config/generated client. npm audit returned zero vulnerabilities after removal.
+- Supabase security advisor returned no findings after RLS changes.
 
-## Not yet completed
+## Remaining / not production complete
 
-- No DATABASE_URL has been provisioned or configured.
-- No migration has been generated or applied.
-- Database readiness cannot return ready until PostgreSQL is configured.
-- No authentication/session provider exists; request workspace data is not authorization.
-- No user-facing APIs write customer data yet.
-- Prisma CLI audit reports a high-severity transitive effect advisory in the installed CLI tree. Verify upstream remediation before production use.
+- Campaign, brand, CRM and market modules have database schema but not complete CRUD UI/use cases.
+- Auth email delivery, sender/domain configuration, redirect allowlist and deployed hostname are not verified. Configure localhost and production /auth/callback URLs in Supabase Auth URL settings.
+- No automated integration tests or cross-tenant negative tests yet.
+- Storage upload/download UI and malware/content validation are not implemented.
+- AI gateway, provider secret vault, quota/usage enforcement, approval workflow, background workers/outbox, external OAuth connectors, billing and notifications remain pending.
+- Hosted migrations need exporting into version-controlled supabase/migrations files using Supabase CLI.
+- Workspace UI remains partly demo-driven. Do not treat placeholder screens as completed product features.
 
-## Safety note
+## Validation
 
-Keep the current demo UI and sample data clearly labeled. Do not put real customer or prospect information into the prototype.
+The initial Supabase security advisor returned no findings. Performance advisor initially identified missing foreign-key indexes; indexes were added. Remaining INFO-level unused-index notices are expected on an empty database. Re-run build/lint/typecheck after final edits.
