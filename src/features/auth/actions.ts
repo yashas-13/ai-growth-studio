@@ -25,6 +25,9 @@ export async function signInAction(form: FormData) {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error || !data.user) {
+    if (error?.code === 'email_not_confirmed' || error?.message.toLowerCase().includes('email not confirmed')) {
+      redirect('/login?error=Please%20confirm%20your%20email%20using%20the%20link%20sent%20to%20your%20inbox%20before%20signing%20in.')
+    }
     redirect('/login?error=Invalid%20email%20or%20password')
   }
 
