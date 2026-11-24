@@ -1,5 +1,2 @@
-import { WorkspaceApp } from '@/features/workspace/components/workspace-app'
-
-export default function IntegrationsSettingsPage() {
-  return <WorkspaceApp initialSection="Settings" initialSettingsTab="Integrations" />
-}
+import {SettingsPage} from '@/features/resources/settings-page'
+export default function Page(){return <SettingsPage tab="integrations" path="/settings/integrations"/>}

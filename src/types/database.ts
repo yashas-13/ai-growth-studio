@@ -558,6 +558,47 @@ export type Database = {
           },
         ]
       }
+      lead_segments: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          filters: Json
+          id: string
+          name: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          filters?: Json
+          id?: string
+          name: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          filters?: Json
+          id?: string
+          name?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_segments_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           company: string
@@ -684,6 +725,63 @@ export type Database = {
           },
         ]
       }
+      outreach_drafts: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          body: string
+          created_at: string
+          created_by: string | null
+          id: string
+          lead_id: string
+          status: string
+          subject: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          body: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          lead_id: string
+          status?: string
+          subject: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          body?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          lead_id?: string
+          status?: string
+          subject?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outreach_drafts_lead_workspace_fk"
+            columns: ["lead_id", "workspace_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id", "workspace_id"]
+          },
+          {
+            foreignKeyName: "outreach_drafts_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_path: string | null
@@ -707,6 +805,97 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      provider_connections: {
+        Row: {
+          category: string
+          created_at: string
+          created_by: string | null
+          display_name: string
+          enabled: boolean
+          endpoint: string | null
+          id: string
+          model: string | null
+          provider: string
+          settings: Json
+          status: string
+          updated_at: string
+          workspace_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          created_by?: string | null
+          display_name: string
+          enabled?: boolean
+          endpoint?: string | null
+          id?: string
+          model?: string | null
+          provider: string
+          settings?: Json
+          status?: string
+          updated_at?: string
+          workspace_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          created_by?: string | null
+          display_name?: string
+          enabled?: boolean
+          endpoint?: string | null
+          id?: string
+          model?: string | null
+          provider?: string
+          settings?: Json
+          status?: string
+          updated_at?: string
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_connections_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: false
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      workspace_preferences: {
+        Row: {
+          locale: string
+          notification_preferences: Json
+          timezone: string
+          updated_at: string
+          updated_by: string | null
+          workspace_id: string
+        }
+        Insert: {
+          locale?: string
+          notification_preferences?: Json
+          timezone?: string
+          updated_at?: string
+          updated_by?: string | null
+          workspace_id: string
+        }
+        Update: {
+          locale?: string
+          notification_preferences?: Json
+          timezone?: string
+          updated_at?: string
+          updated_by?: string | null
+          workspace_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workspace_preferences_workspace_id_fkey"
+            columns: ["workspace_id"]
+            isOneToOne: true
+            referencedRelation: "workspaces"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       workspaces: {
         Row: {

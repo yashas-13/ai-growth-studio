@@ -1,2 +1,2 @@
-import { FeaturePlaceholder } from '@/features/workspace/components/feature-placeholder'
-export default function CrmActivitiesPage() { return <FeaturePlaceholder area="CRM Hub" title="Activities" description="Unified activity timeline for tasks, calls, meetings, emails and system events." /> }
+import {ResourcePage} from '@/features/resources/resource-page'
+export default async function Page({searchParams}:{searchParams:Promise<{error?:string;saved?:string;deleted?:string}>}){return <ResourcePage resource="activities" path="/crm/activities" searchParams={searchParams}/>}

@@ -1,5 +1,2 @@
-import { WorkspaceApp } from '@/features/workspace/components/workspace-app'
-
-export default function AiSettingsPage() {
-  return <WorkspaceApp initialSection="Settings" initialSettingsTab="AI providers" />
-}
+import {SettingsPage} from '@/features/resources/settings-page'
+export default function Page(){return <SettingsPage tab="ai" path="/settings/ai"/>}

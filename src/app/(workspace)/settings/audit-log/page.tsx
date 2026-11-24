@@ -1,2 +1,2 @@
-import { FeaturePlaceholder } from '@/features/workspace/components/feature-placeholder'
-export default function AuditLogPage() { return <FeaturePlaceholder area="Settings" title="Audit log" description="Search append-only workspace audit events, actor, resource, timestamp and export history." /> }
+import {SettingsPage} from '@/features/resources/settings-page'
+export default function Page(){return <SettingsPage tab="audit" path="/settings/audit-log"/>}

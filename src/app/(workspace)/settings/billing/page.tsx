@@ -1,5 +1,2 @@
-import { WorkspaceApp } from '@/features/workspace/components/workspace-app'
-
-export default function BillingSettingsPage() {
-  return <WorkspaceApp initialSection="Settings" initialSettingsTab="Usage & billing" />
-}
+import {SettingsPage} from '@/features/resources/settings-page'
+export default function Page(){return <SettingsPage tab="billing" path="/settings/billing"/>}

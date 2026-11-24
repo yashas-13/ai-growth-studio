@@ -1,2 +1,2 @@
-import { FeaturePlaceholder } from '@/features/workspace/components/feature-placeholder'
-export default function MarketCompetitorsPage() { return <FeaturePlaceholder area="MarketPulse AI" title="Competitors" description="Manage competitor entities and compare content coverage, visibility observations and positioning." /> }
+import {ResourcePage} from '@/features/resources/resource-page'
+export default async function Page({searchParams}:{searchParams:Promise<{error?:string;saved?:string;deleted?:string}>}){return <ResourcePage resource="competitors" path="/market/competitors" searchParams={searchParams}/>}

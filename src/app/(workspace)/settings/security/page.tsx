@@ -1,5 +1,2 @@
-import { WorkspaceApp } from '@/features/workspace/components/workspace-app'
-
-export default function SecuritySettingsPage() {
-  return <WorkspaceApp initialSection="Settings" initialSettingsTab="Security" />
-}
+import {SettingsPage} from '@/features/resources/settings-page'
+export default function Page(){return <SettingsPage tab="security" path="/settings/security"/>}

@@ -1,2 +1,2 @@
-import { FeaturePlaceholder } from '@/features/workspace/components/feature-placeholder'
-export default function CrmContactsPage() { return <FeaturePlaceholder area="CRM Hub" title="Contacts" description="Canonical person records, identity resolution, consent, ownership and engagement history." /> }
+import {ResourcePage} from '@/features/resources/resource-page'
+export default async function Page({searchParams}:{searchParams:Promise<{error?:string;saved?:string;deleted?:string}>}){return <ResourcePage resource="contacts" path="/crm/contacts" searchParams={searchParams}/>}

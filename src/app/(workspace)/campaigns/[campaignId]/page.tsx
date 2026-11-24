@@ -1,2 +1,2 @@
-import { FeaturePlaceholder } from '@/features/workspace/components/feature-placeholder'
-export default async function CampaignDetailPage({ params }: { params: Promise<{ campaignId: string }> }) { const { campaignId } = await params; return <FeaturePlaceholder area="AdGenius AI" title="Campaign detail" description={`Campaign ${campaignId}: strategy, creative versions, approval history and performance reporting.`} /> }
+import {ResourceDetailPage} from '@/features/resources/resource-detail'
+export default async function Page({params}:{params:Promise<{campaignId:string}>}){const {campaignId}=await params;return <ResourceDetailPage resource="campaigns" id={campaignId} path="/campaigns"/>}
