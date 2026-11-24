@@ -1,67 +1,19 @@
-# Product roadmap and execution backlog
 
-## Milestone 0 — Prototype foundation
-- [x] Isolated Next.js App Router project and responsive app shell.
-- [x] AdGenius campaign workflow, BrandPilot identity preview, LeadHunter pipeline, MarketPulse AEO demo and CRM Hub.
-- [x] Explicit sample-data labels and no live external integrations.
-- [x] Dependency installation, lint, type and production build verification.
-- [x] Create GitHub repository and publish initial commit.
-- [x] CI and issue templates.
-- [ ] Dependency security remediation for Prisma CLI transitive advisory.
 
-## Milestone 1 — Secure platform foundation
-- [x] ADR for auth, tenancy, AI provider policy and retention boundaries.
-- [x] Initial PostgreSQL schema: users, workspaces, memberships, leads and audit events.
-- [x] Prisma 7 client generation and database adapter setup.
-- [x] Liveness and database-readiness endpoints.
-- [x] Zod create-lead payload contract.
-- [ ] Provision PostgreSQL and configure secret DATABASE_URL.
-- [ ] Generate and apply versioned migrations against the approved database.
-- [ ] Authentication, organizations, memberships and RBAC enforcement.
-- [ ] Tenant-scoped service layer and PostgreSQL RLS / cross-tenant negative tests.
-- [ ] Append-only database audit permissions and immutable event pipeline.
-- [ ] Redis queue, worker lifecycle, retries and dead-letter handling.
-- [ ] API contracts and integration tests.
+## Architecture baseline — November 2026
+- [x] Move the main workspace UI out of the root route into a feature-owned component.
+- [x] Add independent App Router entrypoints for dashboard, campaigns, brand, leads, market, CRM and settings.
+- [x] Add route scaffolds for campaign/lead details, brand assets/calendar, lead import/segments/outreach, market audits/keywords/competitors/reports, CRM records/connectors/sync and settings subpages.
+- [x] Add public identity page shells; authentication forms remain disabled until an identity provider is integrated.
+- [x] Document modular-monolith architecture, repository structure, page inventory, API conventions and ADR-002.
+- [x] Add fail-closed workspace authorization seam, standard API response/error envelope and tenant-scoped lead repository/service example.
+- [x] Add versioned GET/POST leads endpoint with server-derived tenant context, Zod validation, pagination, body limit and transactional audit event.
+- [ ] Wire Auth.js (database sessions), account lifecycle, CSRF protections and permission matrix.
+- [ ] Complete feature UI decomposition; remove remaining demo state and replace it with typed server data loaders and feature API clients.
+- [ ] Provision local PostgreSQL, create reviewed migrations, seed development fixtures and verify tenant isolation.
+- [ ] Expand Prisma domain models for campaigns, brand assets, content calendar, ICP/segments, CRM canonical entities, connectors, sync jobs, AI usage, approvals, outbox and audit retention.
+- [ ] Add PostgreSQL RLS policies after transaction-local tenant context is verified.
+- [ ] Implement AI gateway, queue/outbox worker, storage adapter and first CRM connector.
+- [ ] Add unit/integration/contract/e2e tests, request IDs, rate limiting, observability, backup/restore and security scanning.
 
-## Milestone 2 — AdGenius AI
-- [ ] Campaign brief model and validation.
-- [ ] Versioned prompt registry and golden test set.
-- [ ] AI gateway with structured output and usage/cost/latency telemetry.
-- [ ] Campaign, audience, channel, creative and budget workflow.
-- [ ] Editable drafts and export.
-- [ ] Approval gates; no ad publishing without explicit authorization.
-
-## Milestone 3 — BrandPilot AI
-- [ ] Brand profiles and asset metadata.
-- [ ] Voice/personality and style-token generation.
-- [ ] Brand kit editing, versioning and export.
-- [ ] Content calendar generation and approvals.
-- [ ] Tenant-scoped object storage.
-
-## Milestone 4 — LeadHunter + CRM
-- [ ] Configurable ICP and qualification criteria.
-- [ ] Authorized company data sources with provenance.
-- [ ] Deterministic and explainable lead scoring.
-- [ ] Outreach drafting with consent/compliance constraints.
-- [ ] Canonical lead/contact/account/activity schema.
-- [ ] First connector (HubSpot), OAuth/token refresh and mappings.
-- [ ] Idempotent sync, signed webhooks, backoff and reconciliation.
-- [ ] Salesforce adapter after connector contract tests pass.
-
-## Milestone 5 — MarketPulse + AEO
-- [ ] Competitor onboarding and public page analysis.
-- [ ] SEO keyword gap workflow.
-- [ ] Curated prompt sets and authorized platform collection methodology.
-- [ ] Citation observations with timestamps and provenance.
-- [ ] Structured data/entity audit.
-- [ ] Historical reporting with coverage disclosure.
-- [ ] No universal ranking claims where the platform does not expose data.
-
-## Milestone 6 — Pilot and production readiness
-- [ ] Recruit 3–5 pilot businesses.
-- [ ] Measure task completion, output quality, weekly return and willingness to pay.
-- [ ] Threat model, SAST/dependency/secret scanning and penetration test.
-- [ ] Backup/restore and incident response runbooks.
-- [ ] Rate limiting, tenant quotas, usage metering and billing policy.
-- [ ] Monitoring, alerts, SLOs, structured logs and tracing.
-- [ ] Deployment, rollback and data migration runbooks.
+See docs/architecture/SYSTEM-ARCHITECTURE.md, FILE-STRUCTURE.md, PAGE-INVENTORY.md, ADR-002-modular-monolith.md and docs/api/API-CONVENTIONS.md.

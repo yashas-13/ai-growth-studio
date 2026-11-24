@@ -1,0 +1,2 @@
+import { FeaturePlaceholder } from '@/features/workspace/components/feature-placeholder'
+export default async function LeadDetailPage({ params }: { params: Promise<{ leadId: string }> }) { const { leadId } = await params; return <FeaturePlaceholder area="LeadHunter AI" title="Prospect detail" description={`Prospect ${leadId}: profile, source provenance, consent, score explanation and activity timeline.`} /> }
