@@ -1,6 +1,11 @@
 import Link from 'next/link'
 import { Sparkles } from 'lucide-react'
-import { forgotPasswordAction, signInAction, signUpAction } from '@/features/auth/actions'
+import {
+  forgotPasswordAction,
+  resendConfirmationAction,
+  signInAction,
+  signUpAction,
+} from '@/features/auth/actions'
 
 type Mode = 'login' | 'register' | 'forgot-password'
 const copy: Record<Mode, { title: string; subtitle: string; button: string }> = {
@@ -40,6 +45,14 @@ export function AuthPage({
           {mode === 'register' && <label>Workspace name<input name="workspace_name" required maxLength={120} placeholder="Your company" /></label>}
           <button className="btn btn-primary btn-md" type="submit">{c.button}</button>
         </form>
+        {mode === 'login' && (
+          <form action={resendConfirmationAction} className="auth-form">
+            <label>Email confirmation
+              <input type="email" name="email" autoComplete="email" required placeholder="Enter your account email" />
+            </label>
+            <button className="btn btn-secondary btn-md" type="submit">Resend confirmation email</button>
+          </form>
+        )}
         <div className="auth-links">
           {mode === 'login' && <Link href="/forgot-password">Forgot password?</Link>}
           {mode === 'login' ? <Link href="/register">Create an account</Link> : <Link href="/login">Back to sign in</Link>}

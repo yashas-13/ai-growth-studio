@@ -12,6 +12,16 @@ function safeInternalPath(value: string, fallback = '/dashboard') {
     : fallback
 }
 
+function appOrigin() {
+  const configured = process.env.NEXT_PUBLIC_APP_URL
+  if (!configured) throw new Error('NEXT_PUBLIC_APP_URL must be configured')
+  const url = new URL(configured)
+  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password) {
+    throw new Error('NEXT_PUBLIC_APP_URL must be a valid HTTP(S) origin')
+  }
+  return url.origin
+}
+
 export async function signInAction(form: FormData) {
   const email = field(form, 'email').toLowerCase()
   const password = String(form.get('password') ?? '')
@@ -26,7 +36,7 @@ export async function signInAction(form: FormData) {
 
   if (error || !data.user) {
     if (error?.code === 'email_not_confirmed' || error?.message.toLowerCase().includes('email not confirmed')) {
-      redirect('/login?error=Please%20confirm%20your%20email%20using%20the%20link%20sent%20to%20your%20inbox%20before%20signing%20in.')
+      redirect('/login?error=Email%20not%20confirmed.%20Use%20the%20resend%20form%20below%20to%20get%20a%20fresh%20link.')
     }
     redirect('/login?error=Invalid%20email%20or%20password')
   }
@@ -36,7 +46,6 @@ export async function signInAction(form: FormData) {
       typeof data.user.user_metadata?.workspace_name === 'string'
         ? data.user.user_metadata.workspace_name
         : 'My Workspace'
-
     await ensurePersonalWorkspace(supabase, data.user.id, workspaceName)
   } catch {
     await supabase.auth.signOut()
@@ -62,7 +71,7 @@ export async function signUpAction(form: FormData) {
     email,
     password,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/auth/callback`,
+      emailRedirectTo: `${appOrigin()}/auth/callback`,
       data: { full_name: fullName, workspace_name: workspaceName },
     },
   })
@@ -82,13 +91,33 @@ export async function signUpAction(form: FormData) {
   redirect('/login?message=Check%20your%20email%20to%20confirm%20your%20account')
 }
 
+export async function resendConfirmationAction(form: FormData) {
+  const email = field(form, 'email').toLowerCase()
+  if (!email || email.length > 254) {
+    redirect('/login?message=If%20this%20account%20needs%20confirmation,%20a%20new%20email%20will%20be%20sent.')
+  }
+
+  try {
+    const supabase = await createClient()
+    await supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: { emailRedirectTo: `${appOrigin()}/auth/callback` },
+    })
+  } catch {
+    // Keep the response generic to avoid account enumeration and hide provider details.
+  }
+
+  redirect('/login?message=If%20this%20account%20needs%20confirmation,%20a%20new%20email%20will%20be%20sent.%20Use%20the%20latest%20link%20from%20your%20inbox.')
+}
+
 export async function forgotPasswordAction(form: FormData) {
   const email = field(form, 'email').toLowerCase()
   if (!email) redirect('/forgot-password?error=Enter%20your%20email')
 
   const supabase = await createClient()
   await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/auth/callback?next=/settings/security`,
+    redirectTo: `${appOrigin()}/auth/callback?next=/settings/security`,
   })
 
   redirect('/login?message=If%20the%20account%20exists,%20a%20reset%20email%20has%20been%20sent')
