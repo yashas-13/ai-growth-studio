@@ -10,3 +10,11 @@ coverage/
 *.tsbuildinfo
 .DS_Store
 Thumbs.db
+
+/src/generated/prisma
+
+# Local agent skill installs (keep machine-local)
+/.agents/
+/.claude/
+/.windsurf/
+skills-lock.json

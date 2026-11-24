@@ -4,18 +4,24 @@
 - [x] Isolated Next.js App Router project and responsive app shell.
 - [x] AdGenius campaign workflow, BrandPilot identity preview, LeadHunter pipeline, MarketPulse AEO demo and CRM Hub.
 - [x] Explicit sample-data labels and no live external integrations.
-- [ ] Dependency installation, lint, type and production build verification.
-- [ ] Create GitHub repository and publish initial commit.
-- [ ] CI, issue templates and security scanning.
+- [x] Dependency installation, lint, type and production build verification.
+- [x] Create GitHub repository and publish initial commit.
+- [x] CI and issue templates.
+- [ ] Dependency security remediation for Prisma CLI transitive advisory.
 
 ## Milestone 1 — Secure platform foundation
-- [ ] ADRs for auth, tenancy, AI provider policy and retention.
-- [ ] PostgreSQL schema and versioned migrations.
-- [ ] Authentication, organizations, memberships and RBAC.
-- [ ] Tenant-scoped service layer and database policy tests.
-- [ ] Audit event schema and append-only writes.
+- [x] ADR for auth, tenancy, AI provider policy and retention boundaries.
+- [x] Initial PostgreSQL schema: users, workspaces, memberships, leads and audit events.
+- [x] Prisma 7 client generation and database adapter setup.
+- [x] Liveness and database-readiness endpoints.
+- [x] Zod create-lead payload contract.
+- [ ] Provision PostgreSQL and configure secret DATABASE_URL.
+- [ ] Generate and apply versioned migrations against the approved database.
+- [ ] Authentication, organizations, memberships and RBAC enforcement.
+- [ ] Tenant-scoped service layer and PostgreSQL RLS / cross-tenant negative tests.
+- [ ] Append-only database audit permissions and immutable event pipeline.
 - [ ] Redis queue, worker lifecycle, retries and dead-letter handling.
-- [ ] API contracts with Zod and generated client types.
+- [ ] API contracts and integration tests.
 
 ## Milestone 2 — AdGenius AI
 - [ ] Campaign brief model and validation.
